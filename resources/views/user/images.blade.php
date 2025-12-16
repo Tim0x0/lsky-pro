@@ -124,7 +124,7 @@
 
     <script type="text/html" id="albums-item-tpl">
         <a href="javascript:void(0)" data-id="__id__" data-json='__json__' title="__intro__" class="albums-item flex justify-between items-center group px-2 h-7 rounded w-full bg-gray-100 text-gray-800 hover:bg-blue-300 hover:text-white">
-            <span class="text-sm truncate w-[80%] name">__name__</span>
+            <span class="text-sm truncate w-[80%] name"><span class="text-gray-400 group-hover:text-gray-200">[__id__]</span> __name__</span>
             <div class="flex items-center justify-center space-x-1 hidden group-hover:block">
                 <span class="update"><i class="fas fa-edit text-xs"></i></span>
                 <span class="delete"><i class="fas fa-trash-alt text-xs text-red-400"></i></span>
@@ -375,10 +375,11 @@
                         let $item = $(this).closest('a.albums-item');
                         $albums.find(UPDATE_ID).remove();
                         if (selectedId !== $item.data('id')) {
+                            let albumData = $item.data('json'); // 20251214 by Tim 从json数据获取，避免HTML干扰
                             $item.after($('#album-update-tpl').html()
-                                .replace(/__id__/g, $item.data('id'))
-                                .replace(/__name__/g, $item.find('>span').html())
-                                .replace(/__intro__/g, $item.attr('title'))
+                                .replace(/__id__/g, albumData.id)
+                                .replace(/__name__/g, albumData.name)
+                                .replace(/__intro__/g, albumData.intro || '')
                             );
                         }
                     });
@@ -432,9 +433,18 @@
                             let $errorMessage = $albums.find(UPDATE_ID + ' .error-message').html('').hide();
                             if (response.data.status) {
                                 let $editContainer = $(this).closest(UPDATE_ID);
-                                $albums.find(`>a[data-id=${$editContainer.data('id')}]`)
-                                    .attr('title', $form.find('textarea').val())
-                                    .find('.name').text($form.find('input').val());
+                                let albumId = $editContainer.data('id');
+                                let newName = $form.find('input').val();
+                                let newIntro = $form.find('textarea').val();
+                                let $albumItem = $albums.find(`>a[data-id=${albumId}]`);
+                                // 20251214 by Tim 更新时保留ID显示格式，同时更新data-json
+                                $albumItem.attr('title', newIntro)
+                                    .find('.name').html('<span class="text-gray-400 group-hover:text-gray-200">[' + albumId + ']</span> ' + newName);
+                                // 更新data-json以便下次编辑时数据正确
+                                let jsonData = $albumItem.data('json');
+                                jsonData.name = newName;
+                                jsonData.intro = newIntro;
+                                $albumItem.data('json', jsonData);
                                 $editContainer.remove();
                             } else {
                                 $errorMessage.html('<i class="fas fa-exclamation-circle"></i> ' + response.data.message).show();

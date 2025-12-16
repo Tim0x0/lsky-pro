@@ -462,6 +462,11 @@
                             <td class="px-3 py-2 whitespace-nowrap">Integer</td>
                             <td class="px-3 py-2 whitespace-nowrap">储存策略ID</td>
                         </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">album_id <span class="ml-1 px-1.5 py-0.5 text-xs bg-green-100 text-green-600 rounded">NEW</span></td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">相册ID，不传则使用用户默认相册，传空值则不保存到相册</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -624,9 +629,19 @@
                             <td class="px-3 py-2 whitespace-nowrap">相册 ID</td>
                         </tr>
                         <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">strategy_id <span class="ml-1 px-1.5 py-0.5 text-xs bg-green-100 text-green-600 rounded">NEW</span></td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">存储策略 ID，可跨相册查询</td>
+                        </tr>
+                        <tr>
                             <td class="px-3 py-2 whitespace-nowrap">keyword</td>
                             <td class="px-3 py-2 whitespace-nowrap">String</td>
                             <td class="px-3 py-2 whitespace-nowrap">筛选关键字</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">per_page <span class="ml-1 px-1.5 py-0.5 text-xs bg-green-100 text-green-600 rounded">NEW</span></td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">每页数量，默认 40</td>
                         </tr>
                         </tbody>
                     </table>
@@ -814,6 +829,248 @@
                             <td class="px-3 py-2 whitespace-nowrap">data</td>
                             <td class="px-3 py-2 whitespace-nowrap">Object</td>
                             <td class="px-3 py-2 whitespace-nowrap">数据</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-xl mb-2 text-gray-800 font-semibold">随机图片 <span class="ml-1 px-1.5 py-0.5 text-xs bg-green-100 text-green-600 rounded">NEW</span></p>
+        <div class="space-y-4 bg-white p-3 rounded-md mb-10 shadow-custom">
+            <div>
+                <p class="text-lg text-gray-700 font-semibold">随机获取图片</p>
+                <x-code><span class="text-sky-500 select-none">GET </span>/random</x-code>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">请求参数(Query)</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">format</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">返回格式：url(默认)=重定向到图片、json=返回JSON、raw=返回原始图片、text=返回纯文本URL</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">type</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">文件类型筛选，如 jpg、png、gif、mp4 等</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <p class="text-lg text-gray-700 font-semibold">按存储策略随机获取</p>
+                <x-code><span class="text-sky-500 select-none">GET </span>/strategies/:strategy_id/random</x-code>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">请求参数(Params)</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap"><span class="text-red-500">*</span>strategy_id</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">存储策略 ID</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">请求参数(Query)</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">format</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">返回格式：url(默认)/json/raw/text</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">type</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">文件类型筛选</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <p class="text-lg text-gray-700 font-semibold">按相册随机获取</p>
+                <x-code><span class="text-sky-500 select-none">GET </span>/albums/:album_id/random</x-code>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">请求参数(Params)</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap"><span class="text-red-500">*</span>album_id</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">相册 ID</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">请求参数(Query)</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">format</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">返回格式：url(默认)/json/raw/text</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">type</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">文件类型筛选</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <p class="text-lg text-gray-700 font-semibold">批量随机获取</p>
+                <x-code><span class="text-sky-500 select-none">GET </span>/random/batch</x-code>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">请求参数(Query)</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">count</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">获取数量，最大 20，默认 10</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">strategy_id</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">存储策略 ID</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">album_id</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Integer</td>
+                            <td class="px-3 py-2 whitespace-nowrap">相册 ID</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">type</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">文件类型筛选</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="my-4 overflow-x-auto">
+                    <p class="text-sm mb-2">返回参数</p>
+                    <table class="min-w-full">
+                        <thead class="bg-white border">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                字段
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                类型
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                说明
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white border divide-y text-sm">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">status</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Boolean</td>
+                            <td class="px-3 py-2 whitespace-nowrap">状态，true 或 false</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">message</td>
+                            <td class="px-3 py-2 whitespace-nowrap">String</td>
+                            <td class="px-3 py-2 whitespace-nowrap">描述信息</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap">data</td>
+                            <td class="px-3 py-2 whitespace-nowrap">Object[]</td>
+                            <td class="px-3 py-2 whitespace-nowrap">图片数组，每个元素包含图片完整信息及 links</td>
                         </tr>
                         </tbody>
                     </table>

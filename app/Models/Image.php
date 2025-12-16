@@ -238,8 +238,13 @@ class Image extends Model
         return $this->belongsTo(Strategy::class, 'strategy_id', 'id');
     }
 
+    // 20250801 by Tim 新增视频格式跳过缩略图
     public function getThumbnailPathname(): string
     {
+        // 视频格式不生成缩略图，返回空路径
+        if (in_array($this->extension, ['mp4', 'mov', 'avi', 'mkv', 'webm'])) {
+            return '';
+        }
         return trim(config('app.thumbnail_path'), '/')."/{$this->md5}.". ($this->extension === 'svg' ? 'svg' : "png");
     }
 

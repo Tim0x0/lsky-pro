@@ -38,7 +38,8 @@ class GroupRequest extends FormRequest
             'configs.image_save_format' => '',
             'configs.path_naming_rule' => 'max:400',
             'configs.file_naming_rule' => 'max:400',
-            'configs.accepted_file_suffixes' => 'required|array|in:jpeg,jpg,png,gif,tif,bmp,ico,psd,webp,svg',
+            // 20250801 by Tim 新增视频格式支持：mp4, mov, avi, mkv, webm
+            'configs.accepted_file_suffixes' => 'required|array|in:jpeg,jpg,png,gif,tif,bmp,ico,psd,webp,svg,mp4,mov,avi,mkv,webm',
 
             'configs.is_enable_scan' => 'boolean',
             'configs.scanned_action' => [

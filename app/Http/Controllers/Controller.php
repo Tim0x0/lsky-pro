@@ -161,11 +161,11 @@ class Controller extends BaseController
                 $contents = $image->filesystem()->read($image->pathname);
                 $configs = collect($image->group?->configs->get(GroupConfigKey::WatermarkConfigs));
 
-                // 是否启用了水印功能，跳过gif和ico图片
+                // 是否启用了水印功能，跳过gif、ico、svg和视频格式 20250801 by Tim 新增视频格式跳过
                 if (
                     $image->group?->configs->get(GroupConfigKey::IsEnableWatermark) &&
                     $configs->get('mode', Mode::Overlay) == Mode::Dynamic &&
-                    ! in_array($image->extension, ['ico', 'gif', 'svg'])
+                    ! in_array($image->extension, ['ico', 'gif', 'svg', 'mp4', 'mov', 'avi', 'mkv', 'webm'])
                 ) {
                     $quality = $image->group?->configs->get(GroupConfigKey::ImageSaveQuality, 75);
                     $contents = $service->stickWatermark($contents, $configs)->encode($image->extension, $quality)->getEncoded();
@@ -185,8 +185,8 @@ class Controller extends BaseController
 
         $mimetype = $image->mimetype;
 
-        // ico svg 图片直接输出，不经过 InterventionImage 处理
-        if (in_array($image->extension, ['ico', 'svg'])) {
+        // ico、svg和视频格式直接输出，不经过 InterventionImage 处理 20250801 by Tim 新增视频格式跳过
+        if (in_array($image->extension, ['ico', 'svg', 'mp4', 'mov', 'avi', 'mkv', 'webm'])) {
             goto out;
         }
 

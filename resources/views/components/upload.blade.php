@@ -115,7 +115,7 @@
         let $links = $('#links-container');
         let $picker = $('#picker');
         let queue = []; // 文件队列
-        let excludes = ['psd', 'tif']; // 排除支持预览的格式
+        let excludes = ['psd', 'tif', 'mp4', 'mov', 'avi', 'mkv', 'webm']; // 排除支持预览的格式 20250801 by Tim 新增视频格式
         /**
          * 设置状态
          * @param data

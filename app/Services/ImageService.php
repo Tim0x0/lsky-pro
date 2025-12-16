@@ -136,11 +136,16 @@ class ImageService
                 throw new UploadException('储存空间不足');
             }
 
-            // 图片保存至默认相册(若有)
-            if ($albumId = $user->configs->get(UserConfigKey::DefaultAlbum)) {
-                if ($user->albums()->where('id', $albumId)->exists()) {
-                    $image->album_id = $albumId;
+            // 20251213 by Tim 新增API上传支持指定相册。确定图片所属相册：优先使用请求指定的相册，否则使用用户默认相册 
+            $albumId = $request->has('album_id')
+                ? $request->input('album_id')
+                : $user->configs->get(UserConfigKey::DefaultAlbum);
+
+            if ($albumId) {
+                if (!$user->albums()->where('id', $albumId)->exists()) {
+                    throw new UploadException('指定的相册不存在或不属于您');
                 }
+                $image->album_id = $albumId;
             }
 
             $image->user_id = $user->id;
@@ -151,8 +156,8 @@ class ImageService
         // 上传频率限制
         $this->rateLimiter($configs, $request);
 
-        // 图片处理，跳过 ico gif svg
-        if (! in_array($extension, ['ico', 'gif', 'svg'])) {
+        // 图片处理，跳过特殊图片格式和视频格式 20251213 by Tim 新增psd、tif、bmp格式排除
+        if (! in_array($extension, ['ico', 'gif', 'svg', 'psd', 'tif', 'bmp', 'mp4', 'mov', 'avi', 'mkv', 'webm'])) {
             // 图片保存质量与格式
             $quality = $configs->get(GroupConfigKey::ImageSaveQuality, 75);
             $format = $configs->get(GroupConfigKey::ImageSaveFormat);
@@ -245,8 +250,8 @@ class ImageService
             throw new UploadException('图片记录保存失败');
         }
 
-        // 图片检测，跳过 tif、ico、psd、svg 格式
-        if ($configs->get(GroupConfigKey::IsEnableScan) && ! in_array($extension, ['psd', 'ico', 'tif', 'svg'])) {
+        // 图片检测，跳过特殊图片格式和视频格式 20251213 by Tim 新增bmp格式排除
+        if ($configs->get(GroupConfigKey::IsEnableScan) && ! in_array($extension, ['psd', 'ico', 'tif', 'bmp', 'svg', 'mp4', 'mov', 'avi', 'mkv', 'webm'])) {
             $scanConfigs = $configs->get(GroupConfigKey::ScanConfigs);
             if ($this->scan(
                 driver: $scanConfigs['driver'],
@@ -557,10 +562,13 @@ class ImageService
                     @mkdir(dirname($pathname));
                 }
 
-                // 生成缩略图，svg等格式本身体积足够小且网页原生支持(比生成的png缩略图还小)，不用生成缩略图，直接复制文件
-                if($image->extension ==='svg') {
-                    copy($data->getPathname(), $pathname);
-                }else{
+                // 生成缩略图，跳过特殊图片格式和视频格式 20251213 by Tim 新增psd、tif、bmp、ico格式排除
+                if (in_array($image->extension, ['svg', 'psd', 'tif', 'bmp', 'ico', 'mp4', 'mov', 'avi', 'mkv', 'webm'])) {
+                    // svg直接复制，其他格式不生成缩略图
+                    if ($image->extension === 'svg') {
+                        copy($data->getPathname(), $pathname);
+                    }
+                } else {
                     @ini_set('memory_limit', '512M');
 
                     $img = InterventionImage::make($data);
